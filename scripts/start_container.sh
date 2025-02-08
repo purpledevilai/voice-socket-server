@@ -2,7 +2,7 @@
 
 
 # Docker run
-docker run -p 8765:8765 \
+docker run -p 9000:9000 \
   --name voice-socket-server-container \
   -it \
   --env-file .env \
