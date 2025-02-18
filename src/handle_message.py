@@ -9,18 +9,15 @@ async def route_message_type(type, data):
 
     #################################################
     #
+    #
     # -- Audio
     if (type == "audio"):
         await handle_audio_data(data)
     #
+    #
     # -- Create wav file
     elif (type == "create_wav_file"):
         await handle_create_wav_file(data)
-    #
-    #
-    # -- Sample rate
-    elif (type == "print_sample_rate"):
-        handle_print_sample_rate(data)
     #
     #
     # -- Invalid message type

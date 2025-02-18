@@ -7,5 +7,6 @@ def create_new_connection(context_id):
         "last_sample_time_stamp": None,
         "total_samples": 0,
         "pcm_samples": [],
-        "sample_rate": 16000
+        "sample_rate": 16000,
+        "is_doing_vad": False,
     }
