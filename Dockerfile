@@ -4,13 +4,11 @@ FROM python:3.10-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install necessary build tools (gcc, musl-dev, libffi-dev) and clean up afterward
+# Install necessary dependencies for webrtcvad
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
-    libffi-dev \
-    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements.txt to the working directory

@@ -11,7 +11,7 @@ async def perform_vad(sample_rate: int, pcm_samples: list, on_detected_audio_fil
     # Tuning parameters
     vad_aggresiveness = 3 # integer between 0 and 3. 0 is the least aggressive about filtering out non-speech, 3 is the most aggressive
     wait_length_for_more_samples = 0.05 # The length of time to wait for more samples to arrive
-    pause_length_ms = 2000 # The length of silence to wait for before ending the VAD
+    pause_length_ms = 1000 # The length of silence to wait for before ending the VAD
 
     # VAD Setup
     frame_durration_ms = 30
