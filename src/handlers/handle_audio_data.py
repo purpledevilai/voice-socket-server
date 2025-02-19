@@ -1,15 +1,9 @@
 import base64
 import numpy as np
-import asyncio
-from stores.connections import connections
-from lib.perform_vad import perform_vad
+from models.AIVoiceChat import AIVoiceChat
 
 
-
-async def handle_audio_data(data):
-
-    # Context ID
-    context_id = data["context_id"]
+async def handle_audio_data(voice_chat: AIVoiceChat, data: dict):
 
     # Audio data
     base64_audio = data.get("base64_audio")
@@ -19,10 +13,5 @@ async def handle_audio_data(data):
     # PCM data
     pcm_data = np.frombuffer(base64.b64decode(base64_audio), dtype=np.int16)
 
-    # Store audio data
-    connections[context_id]["pcm_samples"].extend(pcm_data)
-
-    if not connections[context_id]["is_doing_vad"]:
-        print("Starting VAD")
-        connections[context_id]["is_doing_vad"] = True
-        asyncio.create_task(perform_vad(context_id))
+    # Pass audio data to voice chat instance
+    voice_chat.on_audio_data(pcm_data)

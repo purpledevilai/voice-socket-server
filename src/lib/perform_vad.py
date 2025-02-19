@@ -1,12 +1,12 @@
 import numpy as np
+from lib.log import log
 from lib.create_wav_from_pcm import create_wav_from_pcm
-from stores.connections import connections
 import webrtcvad
 import asyncio
 
 
 
-async def perform_vad(context_id):
+async def perform_vad(sample_rate: int, pcm_samples: list, on_detected_audio_file: callable):
 
     # Tuning parameters
     vad_aggresiveness = 3 # integer between 0 and 3. 0 is the least aggressive about filtering out non-speech, 3 is the most aggressive
@@ -15,13 +15,9 @@ async def perform_vad(context_id):
 
     # VAD Setup
     frame_durration_ms = 30
-    sample_rate = connections[context_id]["sample_rate"]
     samples_per_frame = sample_rate * frame_durration_ms // 1000
     vad = webrtcvad.Vad()
     vad.set_mode(vad_aggresiveness)
-
-    # PCM samples
-    pcm_samples = connections[context_id]["pcm_samples"] 
 
     # VAD Loop
     sample_index = 0
@@ -47,7 +43,7 @@ async def perform_vad(context_id):
         if is_speech:
             # Speech detected: start if not already started, reset pause count
             if not has_begun_speaking:
-                print("Started speaking")
+                log("perform_vad:", "Started speaking")
                 has_begun_speaking = True
                 speech_start_index = sample_index
             pause_sample_count = 0 # Reset pause count if speaking
@@ -56,14 +52,17 @@ async def perform_vad(context_id):
             if has_begun_speaking:
                 pause_sample_count += 1
                 if pause_sample_count >= pause_samples_to_wait:
-                    print("Stopped speaking")
+                    log("perform_vad:", "Stopped speaking")
                     speech_end_index = sample_index
                     break # End VAD
             
         # Increment step
         sample_index += samples_per_frame
 
+    # Create wav file
     wav_file_path = create_wav_from_pcm(pcm_samples[speech_start_index:speech_end_index], sample_rate)
-    print(f"Wav file created: {wav_file_path}")
+
+    # Notify voice chat instance
+    on_detected_audio_file(wav_file_path)
 
     
