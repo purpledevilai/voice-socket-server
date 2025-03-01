@@ -1,4 +1,6 @@
 py-mon==2.0.5
 websockets==14.2
-numpy==2.2.2
+numpy
 webrtcvad==2.0.10
+langchain==0.3.19
+langchain-openai==0.3.6
